@@ -10,6 +10,8 @@ class Hello extends Actor {
   }
 
   def receive = {
-    case Greeter.Done => context.stop(self)
+    case Greeter.Done =>
+      println("Bye world! </3")
+      context.stop(self)
   }
 }

@@ -6,14 +6,24 @@ object Greeter {
 
   case object Greet
   case object Done
+  final case class Who(who: String)
 
 }
 
 class Greeter extends Actor {
 
-  def receive = {
-    case Greeter.Greet =>
-      println("Hello world!")
+  import Greeter._
+
+  private var msg = "Hello"
+
+  def receive= {
+    case Who(who) =>
+      msg = s"Hello $who!"
+      println(msg)
+      sender() ! Greeter.Done
+    case Greet =>
+      msg = s"Hello world!"
+      println(msg)
       sender() ! Greeter.Done
   }
 }
