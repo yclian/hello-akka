@@ -16,13 +16,10 @@ class Greeter extends Actor {
 
   private var msg = "Hello"
 
-  def receive= {
+  def receive = {
     case Who(who) =>
       msg = s"Hello $who!"
-      println(msg)
-      sender() ! Greeter.Done
     case Greet =>
-      msg = s"Hello world!"
       println(msg)
       sender() ! Greeter.Done
   }
