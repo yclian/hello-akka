@@ -1,6 +1,6 @@
 package com.yclian.akka.typed
 
-import akka.typed.ActorSystem
+import akka.typed.{ActorRef, ActorSystem}
 import akka.typed.scaladsl.Actor
 
 import scala.io.StdIn
@@ -13,10 +13,16 @@ object MainImmutable {
 
   def main(args: Array[String]): Unit = {
 
+    // Actor.deferred is like a factory for a behavior. Creation of the behavior instance is deferred until the actor
+    // is started, as opposed to Actor.immutable that creates the behavior instance immediately before the actor is
+    // running.
     val root = Actor.deferred[Nothing] { ctx =>
 
       import GreeterImmutable._
-      val greeter = ctx.spawn(greeterBehavior, "greeter")
+      // The actor reference is typed, ActorRef[Command] so only messages implementing Greeter2.Command such as
+      // WhoToGreet and Greet can be sent via that ActorRef. Being able to use accurately typed actor references
+      // everywhere is the main goal of Akka Typed.
+      val greeter: ActorRef[Command] = ctx.spawn(greeterBehavior, "greeter")
       greeter ! Who("Sandy Hook")
       greeter ! Greet
 
